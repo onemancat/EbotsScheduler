@@ -1,0 +1,91 @@
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
+
+#Visual Studio files
+*.[Oo]bj
+*.user
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.[Cc]ache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.sdf
+ipch/
+obj/
+[Bb]in/
+[Dd]ebug*/
+[Rr]elease*/
+*.msi
+Ankh.NoLoad
+aspnet_client
+
+#Tooling
+_ReSharper*/
+*.resharper
+[Tt]est[Rr]esult*
+
+#Project files
+[Bb]uild/
+
+#Subversion files
+.svn
+
+# Office Temp Files
+~$*
+
+#jquery UI themes
+*/*/Content/themes/start
+*/*/Content/themes/base
+
+#Logs
+[Ll]og/
+
+# Script packages (set option in VS 2010 to get automatically from nuget when missing)
+packages/
+
+# VS 2015 auto-added folder
+.vs/
+
+#Deployment
+[Tt]emp/
+
+# SecureVideo docs, statements, and logos
+Documents/
+Statements/
+Statement/
+MeetingDownload/
+ExcelDownload/
+[Ll]ogo/
+[Ll]ogos/
+Theme/
+ChatAttachment/
+ThemeBackup/
+Temporary/
+Photo/
+Screencap/
+Baa/
+RecordingsToProcess/
+[Ww]ebM/
+Resource/
+
+# AGNES installer and resource archive
+Agnes*.zip
+
+# Cart-related files
+
+SecureVideo_SOL/SecureVideoWeb/CartRelease/
+SecureVideo_SOL/SecureVideoWeb/CartRelease/
+
+SecureVideo_SOL/SecureVideo.LinuxTasks/aws-logger-errors.txt
