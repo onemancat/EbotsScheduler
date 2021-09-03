@@ -6,9 +6,7 @@ namespace EbotsScheduler
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Generating season...");
-            Generator.GenerateSeason();
-            Console.WriteLine("Season generated.");
+            Season.GenerateSchedule();
         }
     }
 }

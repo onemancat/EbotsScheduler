@@ -7,12 +7,10 @@ namespace EbotsScheduler
     class Team
     {
         public string Name { get; set; }
-        public DateTime[] ByeWeeks { get; set; }
 
-        public Team(string name, params DateTime[] byeWeeks)
+        public Team(string name)
         {
             Name = name;
-            ByeWeeks = byeWeeks;
         }
     }
 }

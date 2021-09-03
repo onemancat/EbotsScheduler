@@ -29,5 +29,10 @@ namespace EbotsScheduler
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return $"{HomeTeam.Name}-{AwayTeam.Name}";
+        }
     }
 }
