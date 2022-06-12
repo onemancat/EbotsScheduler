@@ -17,6 +17,11 @@ namespace EbotsScheduler
             Date = date;
         }
 
+        public void ClearGames()
+        {
+            Games = null;
+        }
+
         public void GenerateGames(Team[] teamsPlayingThisMatchDay)
         {
             // Add games until the number of teams yet to schedule for this MatchDay is either 0 or 1 (if odd number of non-bye teams)

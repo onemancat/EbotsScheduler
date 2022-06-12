@@ -14,6 +14,18 @@ namespace EbotsScheduler
 
         public Cycle FillMatchdays(Cycle rotateFromPreviousCycle)
         {
+            // If this is initial cycle, clear all games
+            if (rotateFromPreviousCycle == null)
+            {
+                foreach (MatchDay matchDay in Season.MatchDays)
+                {
+                    matchDay.ClearGames();
+                }
+            }
+
+            // Set a random bye team order for the cycle
+            List<Team> byeSequence = Season.LeagueTeams.Teams.OrderBy(t => Randomizer.Next()).ToList();
+
             // Generate the initial cycle
             for (int cycleMatchDayNumber = 0; cycleMatchDayNumber < Season.LeagueTeams.MatchDaysPerCycle; cycleMatchDayNumber++)
             {
@@ -52,20 +64,29 @@ namespace EbotsScheduler
                         // Generate a new random set of games for this MatchDay
 
                         // Determine the bye team, if there is one
-                        Team byeTeam = null;
-                        if (Season.LeagueTeams.IsOddNumberOfTeams)
-                        {
-                            byeTeam = Season.LeagueTeams.Teams[cycleMatchDayNumber];
-                        }
+                        Team byeTeam = byeSequence[cycleMatchDayNumber];
 
                         // Find all the teams which do not have a bye this MatchDay
                         Team[] teamsPlayingThisMatchDay = Season.LeagueTeams.Teams.Where(t => byeTeam == null || t.Name != byeTeam.Name).ToArray();
 
                         // The only constraint is that within a cycle, no games can be repeated
-                        do
+                        int redundantTries = 0;
+                        while (true)
                         {
                             thisMatchDay.GenerateGames(teamsPlayingThisMatchDay);
-                        } while (ContainsRedundantGames);
+                            if (ContainsRedundantGames)
+                            {
+                                if (++redundantTries >= 5)
+                                {
+                                    // Blow up the cycle
+                                    return null;
+                                }
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
                     }
                 }
             }

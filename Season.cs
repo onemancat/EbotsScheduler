@@ -8,43 +8,44 @@ namespace EbotsScheduler
     class Season
     {
         /// <summary>
-        /// List of the teams in the league, and each team's bye week(s)
+        /// List of the teams in the league, and each team's requested bye week(s).
         /// </summary>
         public readonly static LeagueTeams LeagueTeams = new LeagueTeams(
             new Team("White")
             , new Team("Red")
-            , new Team("Yellow")
             , new Team("Green")
             , new Team("Blue")
+            , new Team("Black", new DateTime(2022, 6, 25))
         );
 
-        public readonly static string[] MatchTimeSlots = { "6:00", "7:30" };
+        public readonly static string[] MatchTimeSlots = { "9:00", "10:30" };
 
         /// <summary>
         /// List of match days on which games will be played
         /// </summary>
         public readonly static MatchDay[] MatchDays =
         {
-            new MatchDay(new DateTime(2021, 9, 11))
-            , new MatchDay(new DateTime(2021, 9, 18))
-            , new MatchDay(new DateTime(2021, 9, 25))
-            , new MatchDay(new DateTime(2021, 10, 2))
-            , new MatchDay(new DateTime(2021, 10, 9))
-            , new MatchDay(new DateTime(2021, 10, 16))
-            , new MatchDay(new DateTime(2021, 10, 23))
-            , new MatchDay(new DateTime(2021, 10, 30))
-            , new MatchDay(new DateTime(2021, 11, 6))
-            , new MatchDay(new DateTime(2021, 11, 13))
-            , new MatchDay(new DateTime(2021, 11, 20))
-            // No game 11/27/21
-            , new MatchDay(new DateTime(2021, 12, 4))
-            , new MatchDay(new DateTime(2021, 12, 11))
-            , new MatchDay(new DateTime(2021, 12, 18))
+            // With 5 teams would be nice to have multiple of 5 match days so we get a full cycle
+            new MatchDay(new DateTime(2022, 6, 18))
+            , new MatchDay(new DateTime(2022, 6, 25))
+            // 4th of July
+            , new MatchDay(new DateTime(2022, 7, 9))
+            , new MatchDay(new DateTime(2022, 7, 16))
+            , new MatchDay(new DateTime(2022, 7, 23))
+            , new MatchDay(new DateTime(2022, 7, 30))
+            , new MatchDay(new DateTime(2022, 8, 6))
+            , new MatchDay(new DateTime(2022, 8, 13))
+            , new MatchDay(new DateTime(2022, 8, 20))
+            , new MatchDay(new DateTime(2022, 8, 27))
+            // Labor Day
+            , new MatchDay(new DateTime(2022, 9, 10))
+            , new MatchDay(new DateTime(2022, 9, 17))
+            , new MatchDay(new DateTime(2022, 9, 24))
         };
 
         public static MatchDay NextUnfilledMatchDay => MatchDays.FirstOrDefault(m => m.Games == null);
 
-        public readonly static List<Cycle> Cycles = new List<Cycle>();
+        public  static List<Cycle> Cycles = null;
 
         /// <summary>
         /// A cyclic schedule generator that produces randomly one "round" of games, and then continues producing that "round", flipping Home/Away
@@ -59,18 +60,41 @@ namespace EbotsScheduler
                 throw new Exception($"Expected {expectedTimeSlots} time slots, however {MatchTimeSlots.Length} were defined.");
             }
 
-            // Do the initial cycle
-            Cycles.Add(new Cycle().FillMatchdays(null));
-
-            // Do all remaining cycles
-            while (NextUnfilledMatchDay != null)
+            int iterations = 0;
+            bool isFeasible;
+            do
             {
-                Cycles.Add(new Cycle().FillMatchdays(Cycles.Last()));
-            }
+                // Start from scratch each iteration
+                Cycles = new List<Cycle>();
+
+                // Do the initial cycle
+                Cycle validInitialCycle = null;
+                while (validInitialCycle == null)
+                {
+                    validInitialCycle = new Cycle().FillMatchdays(null);
+                }
+                Cycles.Add(new Cycle().FillMatchdays(null));
+
+                // Do all remaining cycles
+                while (NextUnfilledMatchDay != null)
+                {
+                    Cycles.Add(new Cycle().FillMatchdays(Cycles.Last()));
+                }
+
+                isFeasible = DoesScheduleSatisfyAllMustHaveByeDates();
+
+            } while (!isFeasible && ++iterations <= 10000);
 
             // If we are here, then we found a valid solution. Swap home/away teams to alternate.
             Console.WriteLine("EBOTS SEASON SCHEDULE");
             Console.WriteLine("==========================================================================================");
+            if (!isFeasible)
+            {
+                // Since we create a cycle and then copy it, it is certainly possible that not all constraints can be honored
+                // In this case, we should manually swap matchdays around
+                Console.WriteLine("WARNING: Constaints could not all be satisfied. Manual schedule adjustment required.");
+                Console.WriteLine("==========================================================================================");
+            }
             Console.WriteLine($"{Season.LeagueTeams.Teams.Length} Teams");
             Console.WriteLine($"{Season.MatchDays.Length} Match Days");
             Console.WriteLine("==========================================================================================");
@@ -81,5 +105,31 @@ namespace EbotsScheduler
                 Console.WriteLine($"{matchDay}");
             }
         }
+
+        public static bool DoesScheduleSatisfyAllMustHaveByeDates()
+        {
+            // Check to make sure required byes are satified
+            foreach (Team team in LeagueTeams.Teams)
+            {
+                foreach (DateTime mustHaveByeDate in team.MustHaveByeDates)
+                {
+                    foreach (MatchDay matchDay in Season.MatchDays)
+                    {
+                        if (matchDay.Date == mustHaveByeDate)
+                        {
+                            foreach (Game game in matchDay.Games)
+                            {
+                                if (game.HomeTeam.Name == team.Name || game.AwayTeam.Name == team.Name)
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
     }
 }
