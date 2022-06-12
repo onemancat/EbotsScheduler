@@ -9,6 +9,7 @@ namespace EbotsScheduler
     {
         /// <summary>
         /// List of the teams in the league, and each team's requested bye week(s).
+        /// The team names must be entered into TeamSnap exactly as listed here prior to schedule import.
         /// </summary>
         public readonly static LeagueTeams LeagueTeams = new LeagueTeams(
             new Team("White")
@@ -18,7 +19,13 @@ namespace EbotsScheduler
             , new Team("Black", new DateTime(2022, 6, 25))
         );
 
-        public readonly static string[] MatchTimeSlots = { "9:00", "10:30" };
+        // This format is required for TeamSnap upload, do not change
+        public readonly static string[] MatchTimeSlots = { "09:00 AM", "10:30 AM" };
+
+        /// <summary>
+        /// This location must be loaded into TeamSnap prior to import
+        /// </summary>
+        public readonly static string Location = "Estuary Park";
 
         /// <summary>
         /// List of match days on which games will be played
@@ -104,6 +111,21 @@ namespace EbotsScheduler
             {
                 Console.WriteLine($"{matchDay}");
             }
+
+            // Produce the TeamSnap import file
+            StringBuilder csv = new StringBuilder();
+            csv.AppendLine("\"Date\",\"Start Time\",\"Division\",\"Home Team\",\"Away Team\",\"Location\"");
+            foreach (MatchDay matchDay in Season.MatchDays)
+            {
+                for (int i = 0; i < matchDay.Games.Length; i++)
+                {
+                    Game game = matchDay.Games[i];
+                    csv.AppendLine($"\"{matchDay.Date:MM/dd/yyyy}\",\"{Season.MatchTimeSlots[i]}\",\"Division 1\",\"{game.HomeTeam.Name}\",\"{game.AwayTeam.Name}\",\"{Location}\"");
+                }
+            }
+            string outputPath = @$"C:\Systems\EbotsScheduler\Schedule-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.csv";
+            System.IO.File.WriteAllText(outputPath, csv.ToString());
+            System.Diagnostics.Process.Start(outputPath);
         }
 
         public static bool DoesScheduleSatisfyAllMustHaveByeDates()
