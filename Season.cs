@@ -25,7 +25,7 @@ namespace EbotsScheduler
         /// <summary>
         /// This location must be loaded into TeamSnap prior to import
         /// </summary>
-        public readonly static string Location = "Estuary Park";
+        public readonly static string Location = "Estuary Park (Alameda)";
 
         /// <summary>
         /// List of match days on which games will be played
@@ -34,20 +34,13 @@ namespace EbotsScheduler
         {
             // With 5 teams would be nice to have multiple of 5 match days so we get a full cycle
             new MatchDay(new DateTime(2022, 6, 18))
-            , new MatchDay(new DateTime(2022, 6, 25))
-            // 4th of July
+            , new MatchDay(new DateTime(2022, 6, 25))   // No match on July 2
             , new MatchDay(new DateTime(2022, 7, 9))
             , new MatchDay(new DateTime(2022, 7, 16))
             , new MatchDay(new DateTime(2022, 7, 23))
             , new MatchDay(new DateTime(2022, 7, 30))
             , new MatchDay(new DateTime(2022, 8, 6))
             , new MatchDay(new DateTime(2022, 8, 13))
-            , new MatchDay(new DateTime(2022, 8, 20))
-            , new MatchDay(new DateTime(2022, 8, 27))
-            // Labor Day
-            , new MatchDay(new DateTime(2022, 9, 10))
-            , new MatchDay(new DateTime(2022, 9, 17))
-            , new MatchDay(new DateTime(2022, 9, 24))
         };
 
         public static MatchDay NextUnfilledMatchDay => MatchDays.FirstOrDefault(m => m.Games == null);
@@ -125,7 +118,6 @@ namespace EbotsScheduler
             }
             string outputPath = @$"C:\Systems\EbotsScheduler\Schedule-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.csv";
             System.IO.File.WriteAllText(outputPath, csv.ToString());
-            System.Diagnostics.Process.Start(outputPath);
         }
 
         public static bool DoesScheduleSatisfyAllMustHaveByeDates()
