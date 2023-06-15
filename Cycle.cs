@@ -24,7 +24,11 @@ namespace EbotsScheduler
             }
 
             // Set a random bye team order for the cycle
-            List<Team> byeSequence = Season.LeagueTeams.Teams.OrderBy(t => Randomizer.Next()).ToList();
+            List<Team> byeSequence = null;
+            if(Season.LeagueTeams.Teams.Length % 2 == 1)
+            {
+                byeSequence = Season.LeagueTeams.Teams.OrderBy(t => Randomizer.Next()).ToList();
+            }
 
             // Generate the initial cycle
             for (int cycleMatchDayNumber = 0; cycleMatchDayNumber < Season.LeagueTeams.MatchDaysPerCycle; cycleMatchDayNumber++)
@@ -64,7 +68,11 @@ namespace EbotsScheduler
                         // Generate a new random set of games for this MatchDay
 
                         // Determine the bye team, if there is one
-                        Team byeTeam = byeSequence[cycleMatchDayNumber];
+                        Team byeTeam = null;
+                        if (byeSequence != null)
+                        {
+                            byeTeam = byeSequence[cycleMatchDayNumber];
+                        }
 
                         // Find all the teams which do not have a bye this MatchDay
                         Team[] teamsPlayingThisMatchDay = Season.LeagueTeams.Teams.Where(t => byeTeam == null || t.Name != byeTeam.Name).ToArray();

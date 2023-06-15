@@ -12,20 +12,22 @@ namespace EbotsScheduler
         /// The team names must be entered into TeamSnap exactly as listed here prior to schedule import.
         /// </summary>
         public readonly static LeagueTeams LeagueTeams = new LeagueTeams(
-            new Team("White")
-            , new Team("Red")
-            , new Team("Green")
-            , new Team("Blue")
-            , new Team("Black", new DateTime(2022, 6, 25))
+            new Team("White Claws")
+            , new Team("Red Wave")
+            , new Team("Jolly Green Giants")
+            , new Team("Blue Skies")
+            , new Team("Yellow Killa Bees")
+            , new Team("Black Widows")
         );
-
-        // This format is required for TeamSnap upload, do not change
-        public readonly static string[] MatchTimeSlots = { "09:00 AM", "10:30 AM" };
 
         /// <summary>
         /// This location must be loaded into TeamSnap prior to import
         /// </summary>
-        public readonly static string Location = "Estuary Park (Alameda)";
+        public readonly static string DivisionNameInTeamSnap = "East Bay Over 30 Soccer";
+        public readonly static string LocationNameInTeamSnap = "Estuary Park (Alameda)";
+
+        // This format is required for TeamSnap upload, do not change
+        public readonly static string[] MatchTimeSlots = { "08:00 AM", "09:30 AM", "11:00 AM" };
 
         /// <summary>
         /// List of match days on which games will be played
@@ -33,14 +35,17 @@ namespace EbotsScheduler
         public readonly static MatchDay[] MatchDays =
         {
             // With 5 teams would be nice to have multiple of 5 match days so we get a full cycle
-            new MatchDay(new DateTime(2022, 6, 18))
-            , new MatchDay(new DateTime(2022, 6, 25))   // No match on July 2
-            , new MatchDay(new DateTime(2022, 7, 9))
-            , new MatchDay(new DateTime(2022, 7, 16))
-            , new MatchDay(new DateTime(2022, 7, 23))
-            , new MatchDay(new DateTime(2022, 7, 30))
-            , new MatchDay(new DateTime(2022, 8, 6))
-            , new MatchDay(new DateTime(2022, 8, 13))
+            new MatchDay(new DateTime(2023, 6, 17))
+            , new MatchDay(new DateTime(2023, 6, 24)) 
+            , new MatchDay(new DateTime(2023, 7, 1))
+            , new MatchDay(new DateTime(2023, 7, 8))
+            , new MatchDay(new DateTime(2023, 7, 15))
+            , new MatchDay(new DateTime(2023, 7, 22))
+            , new MatchDay(new DateTime(2023, 7, 29))
+            , new MatchDay(new DateTime(2023, 8, 5))
+            , new MatchDay(new DateTime(2023, 8, 12))
+            , new MatchDay(new DateTime(2023, 8, 19))
+            , new MatchDay(new DateTime(2023, 8, 26))
         };
 
         public static MatchDay NextUnfilledMatchDay => MatchDays.FirstOrDefault(m => m.Games == null);
@@ -113,7 +118,7 @@ namespace EbotsScheduler
                 for (int i = 0; i < matchDay.Games.Length; i++)
                 {
                     Game game = matchDay.Games[i];
-                    csv.AppendLine($"\"{matchDay.Date:MM/dd/yyyy}\",\"{Season.MatchTimeSlots[i]}\",\"Division 1\",\"{game.HomeTeam.Name}\",\"{game.AwayTeam.Name}\",\"{Location}\"");
+                    csv.AppendLine($"\"{matchDay.Date:MM/dd/yyyy}\",\"{Season.MatchTimeSlots[i]}\",\"{DivisionNameInTeamSnap}\",\"{game.HomeTeam.Name}\",\"{game.AwayTeam.Name}\",\"{LocationNameInTeamSnap}\"");
                 }
             }
             string outputPath = @$"C:\Systems\EbotsScheduler\Schedule-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.csv";
