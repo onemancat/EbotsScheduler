@@ -12,18 +12,25 @@ namespace EbotsScheduler
         /// The team names must be entered into TeamSnap exactly as listed here prior to schedule import.
         /// </summary>
         public readonly static LeagueTeams LeagueTeams = new LeagueTeams(
-            new Team("White Claws")
-            , new Team("Red Wave")
-            , new Team("Jolly Green Giants")
-            , new Team("Blue Skies")
-            , new Team("Yellow Killa Bees")
-            , new Team("Black Widows")
+            new Team("White")
+            , new Team("Red")
+            , new Team("Green")
+            , new Team("Blue")
+            , new Team("Yellow")
+            , new Team("Black")
+            , new Team("Orange")
         );
 
         /// <summary>
-        /// This location must be loaded into TeamSnap prior to import
+        /// This division must be loaded into TeamSnap prior to import: My Organizations > EBOTS (current season) > 
+        /// Rostering > Division / Team
         /// </summary>
         public readonly static string DivisionNameInTeamSnap = "East Bay Over 30 Soccer";
+
+        /// <summary>
+        /// This location must be loaded into TeamSnap prior to import: My Organizations > EBOTS (current season) >
+        /// Schedule > Locations > Copy Locations from Another League > select bottom-most (most recent) archived
+        /// </summary>
         public readonly static string LocationNameInTeamSnap = "Estuary Park (Alameda)";
 
         // This format is required for TeamSnap upload, do not change
@@ -34,18 +41,21 @@ namespace EbotsScheduler
         /// </summary>
         public readonly static MatchDay[] MatchDays =
         {
-            // With 5 teams would be nice to have multiple of 5 match days so we get a full cycle
-            new MatchDay(new DateTime(2023, 6, 17))
-            , new MatchDay(new DateTime(2023, 6, 24)) 
-            , new MatchDay(new DateTime(2023, 7, 1))
-            , new MatchDay(new DateTime(2023, 7, 8))
-            , new MatchDay(new DateTime(2023, 7, 15))
-            , new MatchDay(new DateTime(2023, 7, 22))
-            , new MatchDay(new DateTime(2023, 7, 29))
-            , new MatchDay(new DateTime(2023, 8, 5))
-            , new MatchDay(new DateTime(2023, 8, 12))
-            , new MatchDay(new DateTime(2023, 8, 19))
-            , new MatchDay(new DateTime(2023, 8, 26))
+            // With 7 teams it is really nice to have multiple of 7 match days so we get a full cycle
+            new MatchDay(new DateTime(2023, 9, 9))
+            , new MatchDay(new DateTime(2023, 9, 16))
+            , new MatchDay(new DateTime(2023, 9, 23))
+            , new MatchDay(new DateTime(2023, 9, 30))
+            , new MatchDay(new DateTime(2023, 10, 7))
+            , new MatchDay(new DateTime(2023, 10, 14))
+            , new MatchDay(new DateTime(2023, 10, 21))
+            , new MatchDay(new DateTime(2023, 10, 28))
+            , new MatchDay(new DateTime(2023, 11, 4))
+            , new MatchDay(new DateTime(2023, 11, 11))
+            , new MatchDay(new DateTime(2023, 11, 18))
+            , new MatchDay(new DateTime(2023, 12, 2))
+            , new MatchDay(new DateTime(2023, 12, 9))
+            , new MatchDay(new DateTime(2023, 12, 16))
         };
 
         public static MatchDay NextUnfilledMatchDay => MatchDays.FirstOrDefault(m => m.Games == null);
